@@ -32,15 +32,15 @@ const styles = StyleSheet.create({
   },
   cabecera: {
     width: "100%",
-    height: 150, // <--- CAMBIO CLAVE: Dale una altura fija en píxeles
-    justifyContent: 'center', // Centra el texto verticalmente sobre la imagen
+    height: 150, 
+    justifyContent: 'center', 
     alignItems: 'center',
   },
   textHeader: { 
     fontFamily: "Instrument-Italic",
     color : "#E3C754",
     fontSize : 28,
-    textShadowColor: '#E3C754', // Un poco de sombra para leer mejor
+    textShadowColor: '#E3C754', 
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 5,
     paddingHorizontal: 20,

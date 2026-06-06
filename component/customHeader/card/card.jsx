@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+
 import {
   View,
   Text,
@@ -6,77 +6,57 @@ import {
   FlatList,
   Pressable,
   Image,
+  ActivityIndicator,
 } from "react-native";
-
+import React, { useContext, useState, useEffect } from "react";
 import { CarritoContext } from "../../carritoContext/CarritoContext";
+import { db } from "../../../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+
 
 function Card() {
   const { agregarAlCarrito } = useContext(CarritoContext);
 
-  const productos = [
-    {
-      id: "1",
-      nombre: "Cera ",
-      precio: 1500,
-      imagen: require("./../../../img/cera.webp"),
-      stock: 3,
-    },
-    {
-      id: "2",
-      nombre: "Tijera",
-      precio: 1200,
-      imagen: require("./../../../img/tijera.webp"),
-      stock: 0,
-    },
-    {
-      id: "3",
-      nombre: "Navaja",
-      precio: 2200,
-      imagen: require("./../../../img/navaja.webp"),
-      stock: 5,
-    },
-    {
-      id: "4",
-      nombre: "Maquina para Pelo",
-      precio: 13000,
-      imagen: require("./../../../img/corta-pelo.webp"),
-      stock: 0,
-    },
-    {
-      id: "5",
-      nombre: "Rebaja Barba",
-      precio: 1700,
-      imagen: require("./../../../img/rebaja-barba.webp"),
-      stock: 1,
-    },
-    {
-      id: "6",
-      nombre: "Gel para Cabello",
-      precio: 3400,
-      imagen: require("./../../../img/Gel.webp"),
-      stock: 2,
-    },
-    {
-      id: "7",
-      nombre: "Fijador",
-      precio: 8000,
-      imagen: require("./../../../img/fijador.webp"),
-      stock: 0,
-    },
-  ];
+  const [productos, setProductos] = useState ([]);
+  const [cargando, setCargando] = useState (true);
+
+  useEffect(() => {
+   
+    const referenciaColeccion = collection(db, "productos");
+
+   
+    const desuscribir = onSnapshot(referenciaColeccion, (snapshot) => {
+    
+      const listaProductos = snapshot.docs.map(doc => ({
+        id: doc.id,   
+        ...doc.data()   
+      }));
+      setProductos(listaProductos);
+      setCargando(false);
+    });
+    return () => desuscribir();
+  }, []);
+  if (cargando) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#77078d" />
+      </View>
+    );
+  }
+
 
   return (
-    <View>
+    <View style={styles.contenedorPrincipal} >
       <FlatList
         data={productos}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            {/* AQUÍ ADENTRO VA EL DISEÑO DE TU TARJETA */}
+           
             <Text style={styles.nombreProducto}>{item.nombre}</Text>
             <Text style={styles.precioProducto}> {"$" + item.precio}</Text>
 
-            <Image source={item.imagen} style={styles.imgProducto} />
+           <Image source={{ uri: item.image }} style={styles.imgProducto} />
 
             <Pressable
               style={({ pressed }) => [
@@ -102,6 +82,9 @@ function Card() {
 }
 
 const styles = StyleSheet.create({
+    contenedorPrincipal: {
+    flex: 1,
+  },
   card: {
     padding: 10,
     marginVertical: 8,
@@ -122,7 +105,7 @@ const styles = StyleSheet.create({
   nombreProducto: {
     fontFamily: "Instrument-Italic",
     fontSize: 28,
-    textShadowColor: "#0505057a", // Un poco de sombra para leer mejor
+    textShadowColor: "#0505057a",
     textShadowOffset: { width: 5, height: 2 },
     shadowOpacity: 0.05,
     textShadowRadius: 8,

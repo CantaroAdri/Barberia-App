@@ -9,6 +9,8 @@ import { CarritoProvider } from "./component/carritoContext/CarritoContext";
 import HomeScreen from "./screen/homeScreen";
 import ProductosScreen from "./screen/productosScreen";
 import CarritoScreen from "./screen/carritoScreen";
+import ReservaScreen from "./screen/reservaScreen";
+
 
 import {
   useFonts,
@@ -56,6 +58,15 @@ export default function App() {
               options={{
                 tabBarIcon: ({ color, size }) => (
                   <Ionicons name="cart" size={size} color={color} />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Reserva"
+              component={ReservaScreen}
+              options={{
+                tabBarIcon: ({ color, size }) => (
+                  <Ionicons name="pencil" size={size} color={color} />
                 ),
               }}
             />

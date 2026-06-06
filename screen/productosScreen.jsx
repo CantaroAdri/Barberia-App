@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image } from "react-native";
 import CustomHeader from "../component/customHeader/customHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Card from "../component/customHeader/card/card";
-// import Contador from "../component/customHeader/counter/count";
+
 
 const ProductosScreen = () => {
 
@@ -43,15 +43,15 @@ const styles = StyleSheet.create({
     fontSize: 20, 
     fontFamily: "Instrument-Italic",
 
-    textShadowColor: 'rgba(96, 6, 114, 0.98)', // Sombra negra con transparencia
-    textShadowOffset: { width: 4, height: 2 }, // Se mueve un poco a la izquierda y abajo
+    textShadowColor: 'rgba(96, 6, 114, 0.98)', 
+    textShadowOffset: { width: 4, height: 2 }, 
     textShadowRadius: 15,
   },
   footer: {
-    flexDirection: 'row',       // <-- Esta es la clave para ponerlos en línea
-    justifyContent: 'center',    // Centra los iconos horizontalmente
-    alignItems: 'center',        // Centra los iconos verticalmente
-    paddingVertical: 20,         // Espacio arriba y abajo del footer
+    flexDirection: 'row',       
+    justifyContent: 'center',  
+    alignItems: 'center',        
+    paddingVertical: 20,       
   },
 });
 

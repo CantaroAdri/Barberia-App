@@ -50,15 +50,15 @@ const styles = StyleSheet.create({
     fontSize: 20, 
     fontFamily: "Instrument-Italic",
 
-    textShadowColor: 'rgba(96, 6, 114, 0.98)', // Sombra negra con transparencia
-    textShadowOffset: { width: 4, height: 2 }, // Se mueve un poco a la izquierda y abajo
-    textShadowRadius: 15, // Difuminado suave
+    textShadowColor: 'rgba(96, 6, 114, 0.98)', 
+    textShadowOffset: { width: 4, height: 2 }, 
+    textShadowRadius: 15,
   },
   section:{
     margin: 20,
     padding: 10,
-    borderWidth: 2,           // Grosor
-    borderColor: '#d4af37',   // Color dorado para tu barbería
+    borderWidth: 2,         
+    borderColor: '#d4af37',  
     borderRadius: 15,
 
     backgroundColor: '#fff',
@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
   },
 
 footer: {
-    flexDirection: 'row',       // <-- Esta es la clave para ponerlos en línea
-    justifyContent: 'center',    // Centra los iconos horizontalmente
-    alignItems: 'center',        // Centra los iconos verticalmente
-    paddingVertical: 20,         // Espacio arriba y abajo del footer
+    flexDirection: 'row',       
+    justifyContent: 'center',    
+    alignItems: 'center',       
+    paddingVertical: 20,        
   },
 });
 

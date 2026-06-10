@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   Alert,
+  Linking, 
 } from "react-native";
 import { db } from "../firebase"; 
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
@@ -28,7 +29,7 @@ function ReservaScreen() {
   const [hora, setHora] = useState(new Date());
   const [fecha, setFecha] = useState(new Date());
   const [mostrarCalendario, setMostrarCalendario] = useState(false);
-const [mostrarReloj, setMostrarReloj] = useState(false)
+  const [mostrarReloj, setMostrarReloj] = useState(false);
 
   const elUsuarioCambioLaHora = (event, horaSeleccionada) => {
     setMostrarReloj(false);
@@ -39,7 +40,6 @@ const [mostrarReloj, setMostrarReloj] = useState(false)
 
   const elUsuarioCambioLaFecha = (event, fechaSeleccionada) => {
     setMostrarCalendario(false);
-
     if (fechaSeleccionada) {
       setFecha(fechaSeleccionada);
     }
@@ -47,46 +47,65 @@ const [mostrarReloj, setMostrarReloj] = useState(false)
 
   const agendarTurno = async () => {
     try {
-   
       if (cliente.trim() === "") {
         Alert.alert("Error", "Por favor ingresa tu nombre");
         return;
       }
 
+      const fechaTexto = fecha.toLocaleDateString("es-AR"); 
+      const horaTexto = hora.toLocaleTimeString("es-AR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
       const consultaTurnoOcupado = query(
-      collection(db, "turnos"),
-      where("fecha", "==", fecha),
-      where("hora", "==", hora)  
-    );
+        collection(db, "turnos"),
+        where("fecha", "==", fechaTexto), 
+        where("hora", "==", horaTexto) 
+      );   
 
-    const resultadoSnapshot = await getDocs(consultaTurnoOcupado);
+      const resultadoSnapshot = await getDocs(consultaTurnoOcupado);
 
-        if (!resultadoSnapshot.empty) {
-      Alert.alert(
-        "Horario No Disponible", 
-        "Lo sentimos, ese turno ya fue reservado por otro cliente. Por favor elige otro horario o día."
-      );
-      return; 
-    }
+      if (!resultadoSnapshot.empty) {
+        Alert.alert(
+          "Horario No Disponible", 
+          "Lo sentimos, ese turno ya fue reservado por otro cliente. Por favor elige otro horario o día."
+        );
+        return; 
+      }
 
       await addDoc(collection(db, "turnos"), {
         cliente: cliente,
         servicio: servicio,
-        fecha: fecha,
-        hora: hora,
+        fecha: fechaTexto,
+        hora: horaTexto,
         estado: "pendiente",
         fechaCreacion: new Date(),
       });
 
+     
+      const mensajeWhatsapp = `¡Hola! Acabo de reservar un turno a través de la app.
+Cliente: ${cliente}
+Servicio: ${servicio}
+Fecha: ${fechaTexto}
+Hora: ${horaTexto}hs`;
+
+      const numeroBarbero = "1156559756"; 
+      const url = `whatsapp://send?phone=549${numeroBarbero}&text=${encodeURIComponent(mensajeWhatsapp)}`;
+
+     
+      await Linking.openURL(url);
+
       Alert.alert("¡Éxito!", "Tu turno ha sido reservado");
       setCliente("");
-      setservicio("");
+      setServicio("");
       setFecha(new Date());
       setHora(new Date());
+
     } catch (error) {
       console.error("Error al guardar el turno: ", error);
     }
-  };
+  }; 
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -114,7 +133,6 @@ const [mostrarReloj, setMostrarReloj] = useState(false)
         />
 
         <Text style={styles.label}>Fecha:</Text>
-
         <Pressable
           style={styles.inputFalso}
           onPress={() => setMostrarCalendario(true)}
@@ -169,14 +187,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-
   dropdown: {
     borderWidth: 1,
     borderColor: "#ccc",
     padding: 10,
     borderRadius: 5,
   },
-
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -186,7 +202,6 @@ const styles = StyleSheet.create({
   },
   boton: {
     backgroundColor: "#77078d",
-    color: "white",
     padding: 15,
     borderRadius: 10,
   },
@@ -195,7 +210,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
- 
   inputFalso: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -209,7 +223,6 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   label: {
-    
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 10,
